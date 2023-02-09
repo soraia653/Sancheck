@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
+# parks stored as favourites
 class SavedParks(models.Model):
     class Meta:
         verbose_name_plural = 'Saved Parks'
@@ -16,6 +17,7 @@ class SavedParks(models.Model):
     def __str__(self):
         return f"User {self.user_id} stored park ID {self.park_id} in their favourites."
 
+# tags given to parks
 class ParkTag(models.Model):
 
     class Meta:
@@ -23,7 +25,7 @@ class ParkTag(models.Model):
 
     tag_name = models.CharField(max_length=255)
     park_id = models.CharField(max_length=255)
-    num_upvotes = models.ManyToManyField(User, related_name='tag_upvotes')
+    num_upvotes = models.ManyToManyField(User, related_name='tag_upvotes', default=1)
 
     def serialize(self):
         return {
