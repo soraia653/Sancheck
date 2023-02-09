@@ -1,0 +1,40 @@
+{% extends "sancheck/layout.html" %}
+{% load static %}
+
+{% block css_script %}
+  <link rel="stylesheet" type='text/css' href="{% static 'sancheck/css/base.css' %}">
+{% endblock css_script %}
+
+{% block myjs %}
+  <script src="{% static 'sancheck/javascript/base.js' %}"></script>
+{% endblock myjs %}
+
+{% block content %}
+
+      <!-- HERO SECTION -->
+      <div class="hero">
+        <div class="ctr">
+          <h1 class="hero__h">Where do you want to go?</h1>
+          <form action="{% url 'dashboard' %}" method="post">
+            {% csrf_token %}
+            <div class="hero__bar">
+                <input
+                  id="destination-input"
+                  name="destination-input"
+                  class="a1 form-control form-control-lg"
+                  type="text"
+                  placeholder="Destination"
+                  >
+                <button id="search-button" type="submit" class="a1 btn btn-primary btn-lg">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2W55Wdpz_uv81N-sFshn7ueG5_i0HcrI&callback=initAutocomplete&libraries=places&v=weekly"
+        defer
+      ></script>
+
+{% endblock content %}

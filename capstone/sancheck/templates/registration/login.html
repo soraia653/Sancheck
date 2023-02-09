@@ -1,0 +1,166 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
+
+    {% load bootstrap5 %}
+
+    {% bootstrap_css %}
+
+    {% bootstrap_javascript %}
+
+    {% bootstrap_messages %}
+
+    <style>
+
+        html,
+        body {
+        height: 100%;
+        }
+
+        body {
+        display: flex;
+        align-items: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-size: cover;
+          background-position: center;
+          background-image: url('{% static "sancheck/app_images/forest.png" %}');
+        }
+
+        .form-signin {
+            background-color: white;
+            border-radius: 8px;
+            max-width: 550px;
+            padding: 20px;
+        }
+
+        .img1{
+            width: 50%;
+        }
+
+        .asteriskField {
+          display: none;
+        }
+
+        .form-signin .form-floating:focus-within {
+        z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        }
+
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+
+    <title>Sancheck - Let's go!</title>
+  </head>
+
+  <body class="text-center flex-column">
+
+    {% if form.errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      Your username and password didn't match. Please try again.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <main class="form-signin w-100 m-auto">
+
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <h1 class="h1 mb-3 mt-5 fw-normal">Sign In</h1>
+
+        <img class="img1 mb-3" src="{% static 'sancheck/app_images/hello.png' %}">
+
+        <div class="form-floating">
+          {{ form.username|as_crispy_field }}
+        </div>
+
+        <div class="form-floating">
+          {{ form.password|as_crispy_field }}
+        </div>
+
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+
+        <div class="modal-footer">
+          <a class="dropdown-item" href="{% url 'register' %}">New Around Here? Sign Up</a>
+          <a class="dropdown-item" href="{% url 'password-reset' %}">Forgot Password?</a>
+      </div>
+
+      </form>
+    </main>
+      </body>
+</html>

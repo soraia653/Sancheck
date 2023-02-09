@@ -1,0 +1,64 @@
+/*
+    * Optional: Makes the sample page fill the window.
+    */
+    html,
+    body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    }
+
+    .main-section {
+        display: flex;
+        height: calc(100vh - 70px);
+        flex-direction: column;
+    }
+
+    .table-responsive {
+        font-size: 12px;
+        height: 45vh;
+    }
+
+    .timetable {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .modal-header {
+        background-color: #A8E4A0;
+    }
+
+    .img-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #park-address {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    #map {
+        width: 100%;
+        height: 500px;
+    }
+
+    #park-tags {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    #park-tags > button {
+        margin: 6px;
+    }
+
+    .btn {
+        font-size: .9em;
+    }
+
+    #tags-p > p {
+        margin-bottom: 0rem;
+        font-size: 0.9rem;
+    }

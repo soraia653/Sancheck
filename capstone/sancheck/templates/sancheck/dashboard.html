@@ -1,0 +1,142 @@
+{% extends "sancheck/layout.html" %}
+{% load static %}
+
+{% block css_script %}
+  <link rel="stylesheet" type='text/css' href="{% static 'sancheck/css/dashboard.css' %}">
+{% endblock css_script %}
+
+{% block myjs %}
+
+<script>
+   var result = JSON.parse('{{result|escapejs}}');
+   var userLoc = JSON.parse('{{userLoc|escapejs}}');
+</script>
+
+<script src="{% static 'sancheck/javascript/dashboard.js' %}">
+
+</script>
+{% endblock myjs %}
+
+{% block content %}
+
+<section class="main-section">
+        <div id="map"></div>
+        <!-- TABLE CONTAINING PARK INFORMATION -->
+        <div class="table-responsive" id="listing">
+        <table class="table table-hover" id="resultsTable">
+            <thead>
+                <tr>
+                    <th scope="col">Icon</th>
+                    <th scope="col">Park Name</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Dog-Friendly</th>
+                    <th scope="col">Saved</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
+        </div>
+
+</section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="park-img" src="">
+                    </div>
+                    <hr>
+                    <!-- section containing park details -->
+                    <div class="park-details">
+                        <p id="park-address">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                              </svg>
+                        </p>
+                        <div id="park-opening">
+                        </div>
+                        <div>
+                            <table class="timetable table">
+                                <thead class="thead">
+                                  <tr>
+                                    <th scope="col">Weekdays</th>
+                                    <th scope="col">Opening Hours</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monday</td>
+                                        <td id="day1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tuesday</td>
+                                        <td id="day2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wednesday</td>
+                                        <td id="day3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thursday</td>
+                                        <td id="day4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Friday</td>
+                                        <td id="day5"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Saturday</td>
+                                        <td id="day6"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sunday</td>
+                                        <td id="day7"></td>
+                                    </tr>
+                                </tbody>
+                              </table>
+                        </div>
+                        <hr>
+                        <div class="fs-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+                            <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
+                            <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
+                          </svg>
+                          Tags
+                        </div>
+                        <div id="tags-p" class="mb-3 mt-2">
+                            <p>Check all user given tags to this park or add your own.</p>
+                            <p>You can also upvote tags, by clicking on them.</p>
+                        </div>
+                        <div id="park-tags">
+                        </div>
+                        <div id="tags-input">
+                            <input id="tags-input-form" type="text" class="form-control mt-2">
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Add to Favourites
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly"
+            defer
+          ></script>
+
+{% endblock content %}
