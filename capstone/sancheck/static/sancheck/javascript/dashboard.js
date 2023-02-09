@@ -309,69 +309,72 @@ function showModal() {
                 });
 
             });
-            // add new tag
-            var input = document.getElementById('tags-input-form');
-            input.value = "";
+    // add new tag
+    var input = document.getElementById('tags-input-form');
 
-            input.addEventListener('keypress', createTag);
-
-            function createTag(e){
-                if (e.key === 'Enter') {
-
-                    // remove wanted spaces
-                    let tag = e.target.value.trim();
-                    console.log(tag);
-
-                    if (tag.length > 1) {
-
-                        tag.split(',').forEach(tag => {
-
-                            console.log(place_id, tag);
-
-                            // save new tags to DB
-                            fetch(`/sancheck/create_tag/${place_id}/${tag}`, {
-                                method: 'PUT'
-                            })
-                            .then(response => response.json())
-                            .then(response => {
-
-                                var tag_exists = response['message'] == 'Tag already exists.';
-
-                                if (!tag_exists) {
-
-                                    //TODO: display changes immediately
-                                    possible_colors = [
-                                        'primary', 'secondary', 'success',
-                                        'danger', 'warning', 'info'
-                                    ];
-
-                                    var i = Math.floor(Math.random() * (7 - 1) + 1);
-
-                                    var tagSpan = document.createElement("button");
-                                    tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
-                                    tagSpan.setAttribute("id", `park_tag_${response["new_id"]}`);
-
-                                    // number of tag upvotes
-                                    var tagUps = document.createElement("span");
-                                    tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
-
-                                    tagSpan.innerHTML = tag;
-                                    tagUps.innerHTML = 1;
-                                    tagSpan.appendChild(tagUps);
-
-                                    document.getElementById('park-tags').appendChild(tagSpan);
-
-                                }
+    input.addEventListener('keypress', createTag);
 
 
-                            });
-
-                        });
-                    }
-                }
-            }
-        }
+}
     );
+}
+
+// helper functions
+function createTag(e){
+    if (e.key === 'Enter') {
+
+        // remove wanted spaces
+        let tag = e.target.value.trim();
+        console.log(tag);
+        e.target.value = "";
+
+        // if (tag.length > 1) {
+
+        //     tag.split(',').forEach(tag => {
+
+        //         console.log(place_id, tag);
+
+        //         // save new tags to DB
+        //         fetch(`/sancheck/create_tag/${place_id}/${tag}`, {
+        //             method: 'PUT'
+        //         })
+        //         .then(response => response.json())
+        //         .then(response => {
+
+        //             var tag_exists = response['message'] == 'Tag already exists.';
+
+        //             if (!tag_exists) {
+
+        //                 //TODO: display changes immediately
+        //                 possible_colors = [
+        //                     'primary', 'secondary', 'success',
+        //                     'danger', 'warning', 'info'
+        //                 ];
+
+        //                 var i = Math.floor(Math.random() * (7 - 1) + 1);
+
+        //                 var tagSpan = document.createElement("button");
+        //                 tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
+        //                 tagSpan.setAttribute("id", `park_tag_${response["new_id"]}`);
+
+        //                 // number of tag upvotes
+        //                 var tagUps = document.createElement("span");
+        //                 tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
+
+        //                 tagSpan.innerHTML = tag;
+        //                 tagUps.innerHTML = 1;
+        //                 tagSpan.appendChild(tagUps);
+
+        //                 document.getElementById('park-tags').appendChild(tagSpan);
+
+        //             }
+
+
+        //         });
+
+        //     });
+        // }
+    }
 }
 
 window.initMap = initMap;
