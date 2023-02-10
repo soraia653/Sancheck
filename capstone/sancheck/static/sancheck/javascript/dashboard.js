@@ -61,7 +61,6 @@ radius.addListener("radius_changed", search);
 search();
 }
 
-
 // Search for dog parks in the selected city, within the viewport of the map.
 function search(radiusVal) {
 
@@ -179,6 +178,11 @@ function clearResults() {
 }
 
 function showModal() {
+    
+    // clear event listeners from input form
+    var input = document.getElementById('tags-input-form');
+    input.replaceWith(input.cloneNode(true));
+    
     const marker = this;
 
     places.getDetails(
@@ -186,195 +190,210 @@ function showModal() {
         (place, status) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK) {
             return;
+            }
+
+        console.log(place['place_id']);
+
+        // show modal
+        $('#exampleModal').modal('show');
+
+        // set modal title
+        $('#exampleModalLabel').html(place['name']);
+
+        // display picture
+        try {
+            var photo = place['photos'][0].getUrl({
+                maxWidth: 450,
+                maxHeight: 300
+            });
+
+            $('#park-img').attr('src', photo);
+
+        } catch (error) {
+            console.log(error);
         }
 
-    console.log(place);
+        // display address
+        document.getElementById('park-address').innerHTML = place['formatted_address'];
 
+        // opening hours
+        const openDiv = document.getElementById('park-opening');
 
-    // show modal
-    $('#exampleModal').modal('show');
+        // display opening times
 
-    // set modal title
-    $('#exampleModalLabel').html(place['name']);
+        try {
+            const openingTimes = place['opening_hours']['weekday_text'];
 
-    // display picture
-    var photo = place['photos'][0].getUrl({
-        maxWidth: 450,
-        maxHeight: 300
-    });
+            openingTimes.forEach((ot, index) => {
 
-    $('#park-img').attr('src', photo);
+                const [first, ...rest] = ot.split(':');
+                var times = rest.join(':');
 
-    // display address
-    document.getElementById('park-address').innerHTML = place['formatted_address'];
-
-    // opening hours
-    const openDiv = document.getElementById('park-opening');
-
-    // display opening times
-    const openingTimes = place['opening_hours']['weekday_text'];
-
-    openingTimes.forEach((ot, index) => {
-
-        const [first, ...rest] = ot.split(':');
-        var times = rest.join(':');
-
-        document.getElementById(`day${index + 1}`).innerHTML = times;
-
-    });
-
-    $('div#park-opening').empty();
-
-    let alert = document.createElement("div");
-
-    var placeOpen = place['current_opening_hours']['open_now'];
-
-    var content = "";
-
-    if (placeOpen === true) {
-        content = document.createTextNode("Currently open - enjoy!");
-        alert.setAttribute("class", "alert alert-success");
-
-    } else {
-        content = document.createTextNode("It's closed...Come back tomorrow!");
-        alert.setAttribute("class", "alert alert-danger");
-    }
-
-    alert.appendChild(content);
-    openDiv.appendChild(alert);
-
-    // display tags
-    $('div#park-tags').empty();
-
-    var place_id = place['place_id'];
-
-    fetch(`/sancheck/tags/${place_id}`)
-        .then(response => response.json())
-        .then(park_tags => {
-
-            park_tags.forEach(park => {
-
-                possible_colors = [
-                    'primary', 'secondary', 'success',
-                    'danger', 'warning', 'info'
-                ];
-
-                var i = Math.floor(Math.random() * (7 - 1) + 1);
-
-                var tagSpan = document.createElement("button");
-                tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
-                tagSpan.setAttribute("id", `park_tag_${park["id"]}`);
-
-                // number of tag upvotes
-                var tagUps = document.createElement("span");
-                tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
-
-                tagSpan.innerHTML = park['tag'];
-                tagUps.innerHTML = park['upvotes'];
-                tagSpan.appendChild(tagUps);
-
-                document.getElementById('park-tags').appendChild(tagSpan);
-
-                // if user clicks button -> like_post view
-                const selected_tag = document.getElementById(`park_tag_${park["id"]}`);
-
-                selected_tag.addEventListener('click', () => {
-
-                    // update DB table
-                    fetch(`/sancheck/upvote_tag/${park["id"]}`, {
-                        method: 'PUT'
-                    })
-                    .then(response => response.json())
-                    .then(response => {
-                        console.log(response);
-
-                        // display changes immediately
-                        if (response['message'] == 'Upvote removed.') {
-
-                            // decrease count by 1
-                            tagUps.innerHTML = response['upvotes'];
-
-                            //TODO: if num_upvotes = 0, remove tag from display
-                            selected_tag.remove();
-
-                        } else {
-
-                            // increase count by 1
-                            tagUps.innerHTML = response['upvotes'];
-                        }
-
-                    });
-                });
-
-                });
+                document.getElementById(`day${index + 1}`).innerHTML = times;
 
             });
-    // add new tag
-    var input = document.getElementById('tags-input-form');
+        } catch (error) {
+            console.log(error);
+        }
 
-    input.addEventListener('keypress', createTag);
+        $('div#park-opening').empty();
 
+        let alert = document.createElement("div");
 
-}
+        var placeOpen = place['current_opening_hours']['open_now'];
+
+        var content = "";
+
+        if (placeOpen === true) {
+            content = document.createTextNode("Currently open - enjoy!");
+            alert.setAttribute("class", "alert alert-success");
+
+        } else {
+            content = document.createTextNode("It's closed...Come back tomorrow!");
+            alert.setAttribute("class", "alert alert-danger");
+        }
+
+        alert.appendChild(content);
+        openDiv.appendChild(alert);
+
+        // display tags
+        $('div#park-tags').empty();
+
+        var place_id = place['place_id'];
+
+        fetch(`/sancheck/tags/${place_id}`)
+            .then(response => response.json())
+            .then(park_tags => {
+
+                park_tags.forEach(park => {
+
+                    possible_colors = [
+                        'primary', 'secondary', 'success',
+                        'danger', 'warning', 'info'
+                    ];
+
+                    var i = Math.floor(Math.random() * (7 - 1) + 1);
+
+                    var tagSpan = document.createElement("button");
+                    tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
+                    tagSpan.setAttribute("id", `park_tag_${park["id"]}`);
+
+                    // number of tag upvotes
+                    var tagUps = document.createElement("span");
+                    tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
+                    tagUps.setAttribute("id", park["id"]);
+
+                    tagSpan.innerHTML = park['tag'];
+                    tagUps.innerHTML = park['upvotes'];
+                    tagSpan.appendChild(tagUps);
+
+                    document.getElementById('park-tags').appendChild(tagSpan);
+            });
+
+        });
+
+        // add new tag
+        var input = document.getElementById('tags-input-form');
+        var doTag = (event) => createTag(event, place_id);
+        input.addEventListener('keyup', doTag);
+
+        // upvote or downvote tag
+        const allTags = document.getElementById('park-tags');
+
+        allTags.addEventListener('click', updateCount);
+
+        }
     );
 }
 
-// helper functions
-function createTag(e){
+/* ----------------------- HELPER FUNCTIONS -------------------- */
+function createTag(e, placeId){
+    
     if (e.key === 'Enter') {
 
         // remove wanted spaces
         let tag = e.target.value.trim();
-        console.log(tag);
         e.target.value = "";
+        console.log(tag, placeId);
 
-        // if (tag.length > 1) {
+        if (tag.length > 1) {
 
-        //     tag.split(',').forEach(tag => {
+            tag.split(',').forEach(tag => {
 
-        //         console.log(place_id, tag);
+                // save new tags to DB
+                fetch(`/sancheck/create_tag/${placeId}/${tag}`, {
+                    method: 'PUT'
+                })
+                .then(response => response.json())
+                .then(response => {
 
-        //         // save new tags to DB
-        //         fetch(`/sancheck/create_tag/${place_id}/${tag}`, {
-        //             method: 'PUT'
-        //         })
-        //         .then(response => response.json())
-        //         .then(response => {
+                    var tag_exists = response['message'] == 'Tag already exists.';
 
-        //             var tag_exists = response['message'] == 'Tag already exists.';
+                    if (!tag_exists) {
 
-        //             if (!tag_exists) {
+                        //TODO: random tag color
+                        possible_colors = [
+                            'primary', 'secondary', 'success',
+                            'danger', 'warning', 'info'
+                        ];
 
-        //                 //TODO: display changes immediately
-        //                 possible_colors = [
-        //                     'primary', 'secondary', 'success',
-        //                     'danger', 'warning', 'info'
-        //                 ];
+                        var i = Math.floor(Math.random() * (7 - 1) + 1);
 
-        //                 var i = Math.floor(Math.random() * (7 - 1) + 1);
+                        var tagSpan = document.createElement("button");
+                        tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
+                        tagSpan.setAttribute("id", `park_tag_${response["new_id"]}`);
 
-        //                 var tagSpan = document.createElement("button");
-        //                 tagSpan.setAttribute("class", `btn btn-${possible_colors[i]} position-relative`);
-        //                 tagSpan.setAttribute("id", `park_tag_${response["new_id"]}`);
+                        // number of tag upvotes
+                        var tagUps = document.createElement("span");
+                        tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
 
-        //                 // number of tag upvotes
-        //                 var tagUps = document.createElement("span");
-        //                 tagUps.setAttribute("class", "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success");
+                        tagSpan.innerHTML = tag;
+                        tagUps.innerHTML = 1;
+                        tagSpan.appendChild(tagUps);
 
-        //                 tagSpan.innerHTML = tag;
-        //                 tagUps.innerHTML = 1;
-        //                 tagSpan.appendChild(tagUps);
+                        document.getElementById('park-tags').appendChild(tagSpan);
 
-        //                 document.getElementById('park-tags').appendChild(tagSpan);
-
-        //             }
+                    }
 
 
-        //         });
+                });
 
-        //     });
-        // }
+            });
+        }
     }
+}
+
+function updateCount(e) {
+
+    var id = e.target.id.replace(/\D/g, '');
+
+    //update DB table
+    fetch(`/sancheck/upvote_tag/${id}`, {
+        method: 'PUT'
+    })
+    .then(response => response.json())
+    .then(response => {
+
+        console.log(response);
+
+        var voteCount = document.getElementById(e.target.id);
+        console.log(voteCount);
+
+        // display changes immediately
+        if (response['message'] == 'Upvote removed.') {
+
+            // decrease count by 1
+            voteCount.innerHTML = response['upvotes'];
+
+            //TODO: if num_upvotes = 0, remove tag from display
+            e.target.remove();
+
+        } else {
+
+            // increase count by 1
+            voteCount.innerHTML = response['upvotes'];
+        }
+    });
 }
 
 window.initMap = initMap;
