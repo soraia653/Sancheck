@@ -5,12 +5,16 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
-# parks stored as favourites
+# parks stored as favorites
 class SavedParks(models.Model):
+
     class Meta:
         verbose_name_plural = 'Saved Parks'
+        constraints = [
+            models.UniqueConstraint(fields=['user_id', 'park_id'], name='unique_favorite')
+        ]
 
-    user_id = models.ForeignKey(User, on_delete= models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete= models.CASCADE, related_name='user_favorites')
     park_id = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 

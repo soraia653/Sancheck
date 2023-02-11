@@ -302,11 +302,31 @@ function showModal() {
 
         allTags.addEventListener('click', updateCount);
 
+        var favButton = document.getElementById('favoritePark');
+        favButton.myParam = place_id;
+
+        favButton.addEventListener('click', savePark);
+
         }
     );
 }
 
 /* ----------------------- HELPER FUNCTIONS -------------------- */
+function savePark(event) {
+
+    console.log(event.currentTarget.myParam);
+
+    // add or remove from favorites
+    fetch(`/sancheck/favorite/${event.currentTarget.myParam}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log(response);
+    });
+
+}
+
 function createTag(e, placeId){
     
     if (e.key === 'Enter') {
