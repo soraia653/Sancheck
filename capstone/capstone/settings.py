@@ -30,8 +30,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost',
-    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev'
+    'https://sancheck.up.railway.app/'
 ]
 
 
@@ -146,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev'
+    'https://sancheck.up.railway.app/'
     ]
 
 AUTH_USER_MODEL = 'sancheck.User'
