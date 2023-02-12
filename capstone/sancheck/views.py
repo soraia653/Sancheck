@@ -18,6 +18,34 @@ def index(request):
 
     return render(request, 'sancheck/base.html', context_dict)
 
+# FAVORITE PARK VIEWS
+
+@csrf_exempt
+def add_park_favorites(request, park_id):
+
+    output_message = {
+        'message': ''
+    }
+
+    if request.method == 'POST':
+
+        add_fav, created = SavedParks.objects.get_or_create(
+            park_id=park_id,
+            user_id=User.objects.get(id=request.user.id)
+        )
+
+        if not created:
+            # already exists so remove it
+            add_fav.delete()
+            output_message['message'] = 'Park removed from favorites.'
+        else:
+            # it was created
+            output_message['message'] = 'Park added to favorites.'
+
+    return JsonResponse(output_message)
+
+
+# PARK TAG VIEWS
 def get_park_tags(request, park_id):
 
     park_tags = ParkTag.objects.filter(park_id=park_id)
@@ -98,9 +126,13 @@ def dashboard_view(request):
         'lng': g.latlng[1]
     }
 
+    # get user's favorite parks
+    u_fav_parks = User.objects.get(id=request.user.id).user_favorites.all()
+
     context_dict = {
         'result': json.dumps(result),
-        'userLoc': json.dumps(userLoc)
+        'userLoc': json.dumps(userLoc),
+        'favParks': u_fav_parks
     }
 
     return render(request, 'sancheck/dashboard.html', context_dict)

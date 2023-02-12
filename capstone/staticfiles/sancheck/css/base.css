@@ -1,0 +1,31 @@
+html, body {
+    min-height: 100%;
+}
+
+.hero {
+    align-items: center;
+    height: calc(100vh - 66px);
+    background-size: cover;
+    background-position: center;
+    background-image: url('/static/sancheck/app_images/forest.png');
+    padding-top: calc(6.0em + (100vh - 700px)/ 3);
+}
+
+.hero__h {
+    color: white;
+    font-weight: 600;
+    font-size: 3em;
+    text-align: center;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
+
+.hero__bar {
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+}
+
+.a1 {
+    border-radius: 0 !important;
+}

@@ -18,5 +18,6 @@ urlpatterns = [
     # API routes
     path("tags/<str:park_id>", views.get_park_tags, name="park-tags"),
     path("upvote_tag/<int:id>", views.upvote_tag, name="upvote"),
-    path("create_tag/<str:park_id>/<str:tag>", views.create_tag, name="create")
+    path("create_tag/<str:park_id>/<str:tag>", views.create_tag, name="create"),
+    path("favorite/<str:park_id>", views.add_park_favorites, name="favorites"),
 ]
