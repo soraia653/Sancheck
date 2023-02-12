@@ -29,7 +29,10 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev'
+]
 
 
 # Application definition
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,6 +87,7 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+import dj_database_url
 
 DATABASES = {
     'default': {
@@ -90,6 +95,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -126,7 +134,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
