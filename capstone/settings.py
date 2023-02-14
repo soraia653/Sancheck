@@ -27,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'sancheck.up.railway.app',
     'localhost',
-    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev/'
+    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev'
 ]
 
 
@@ -148,7 +148,7 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 CSRF_TRUSTED_ORIGINS = [
     'https://sancheck.up.railway.app',
-    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev/'
+    'https://soraia653-zany-system-rxrpxvw995w3p9v9-8000.preview.app.github.dev'
 ]
 
 AUTH_USER_MODEL = 'sancheck.User'

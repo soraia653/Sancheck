@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 import googlemaps
@@ -10,6 +11,7 @@ from django.conf import settings
 
 from .models import *
 
+@login_required(login_url='/accounts/login/')
 def index(request):
 
     context_dict = {
@@ -112,8 +114,8 @@ def dashboard_view(request):
 
     try:
         # get values from search box
-        searchValue = request.POST["destination-input"]
-        result = gmaps.geocode(searchValue)
+        search_value = request.POST["destination-input"]
+        result = gmaps.geocode(search_value)
 
     except:
         result = {}

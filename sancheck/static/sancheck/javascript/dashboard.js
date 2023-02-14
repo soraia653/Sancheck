@@ -192,8 +192,6 @@ function showModal() {
             return;
             }
 
-        console.log(place['place_id']);
-
         // show modal
         $('#exampleModal').modal('show');
 
@@ -314,8 +312,6 @@ function showModal() {
 /* ----------------------- HELPER FUNCTIONS -------------------- */
 function savePark(event) {
 
-    console.log(event.currentTarget.myParam);
-
     // add or remove from favorites
     fetch(`/sancheck/favorite/${event.currentTarget.myParam}`, {
         method: 'POST'
@@ -334,7 +330,6 @@ function createTag(e, placeId){
         // remove wanted spaces
         let tag = e.target.value.trim();
         e.target.value = "";
-        console.log(tag, placeId);
 
         if (tag.length > 1) {
 
@@ -394,10 +389,7 @@ function updateCount(e) {
     .then(response => response.json())
     .then(response => {
 
-        console.log(response);
-
         var voteCount = document.getElementById(e.target.id);
-        console.log(voteCount);
 
         // display changes immediately
         if (response['message'] == 'Upvote removed.') {
